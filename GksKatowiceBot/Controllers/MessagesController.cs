@@ -50,7 +50,7 @@ public class MessagesController : ApiController
                     userStruct.ServiceUrl = activity.ServiceUrl;
 
                     AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
-                    AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
+                  //  AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
 
                     Helpers.Helpers.listaAdresow.Add(userStruct);
                     ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
@@ -131,8 +131,8 @@ public class MessagesController : ApiController
                     userStruct.botId = activity.Recipient.Id;
                     userStruct.ServiceUrl = activity.ServiceUrl;
 
-                    AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
-                    AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
+                  //  AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
+                   // AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
 
                     Helpers.Helpers.listaAdresow.Add(userStruct);
                     ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
@@ -219,8 +219,8 @@ public class MessagesController : ApiController
                     userStruct.botId = activity.Recipient.Id;
                     userStruct.ServiceUrl = activity.ServiceUrl;
 
-                    AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
-                    AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
+                    //AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
+                   // AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
 
                     Helpers.Helpers.listaAdresow.Add(userStruct);
                     ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
@@ -306,7 +306,7 @@ public class MessagesController : ApiController
                     userStruct.botId = activity.Recipient.Id;
                     userStruct.ServiceUrl = activity.ServiceUrl;
 
-                    AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
+                    //AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
                     AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
 
                     Helpers.Helpers.listaAdresow.Add(userStruct);
@@ -428,8 +428,8 @@ public class MessagesController : ApiController
                     userStruct.botId = activity.Recipient.Id;
                     userStruct.ServiceUrl = activity.ServiceUrl;
 
-                    AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
-                    AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
+                    //AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
+                    //AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
 
                     Helpers.Helpers.listaAdresow.Add(userStruct);
                     ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
