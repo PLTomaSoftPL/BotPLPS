@@ -519,22 +519,17 @@ public class MessagesController : ApiController
         return response;
     }
 
-    public async static void SendThreadMessage()
+    public async static void SendThreadMessage(DataRow dr,DataTable dtWiadomosci,DataTable dtWiadomosciOrlen)
     {
 
         try
-        {
-            if (DateTime.UtcNow.Hour == 17 &&  (DateTime.UtcNow.Minute > 0 && DateTime.UtcNow.Minute <= 3))
-            {
-
-                AddToLog("Wywołanie metody SendThreadMessage");
-
+        { 
                 List<IGrouping<string, string>> hrefList = new List<IGrouping<string, string>>();
                 List<IGrouping<string, string>> hrefList2 = new List<IGrouping<string, string>>();
                 List<IGrouping<string, string>> hreflist3 = new List<IGrouping<string, string>>();
-                var items = GetCardsAttachments(ref hrefList);
+                var items = GetCardsAttachments(ref hrefList,false,dtWiadomosci);
                 hreflist3 = hrefList;
-                var items2 = GetCardsAttachmentsOrlenLiga(ref hrefList2);
+                var items2 = GetCardsAttachmentsOrlenLiga(ref hrefList2,false,dtWiadomosciOrlen);
 
                 var items3 = new List<Attachment>();
 
@@ -610,7 +605,7 @@ public class MessagesController : ApiController
 
                 string uzytkownik = "";
                 Int64 uzytkownikId = 0;
-                DataTable dt = GetUser();
+       //         DataTable dt = GetUser();
 
                 if (items.Count > 0)
                 {
@@ -650,15 +645,14 @@ public class MessagesController : ApiController
 
                         message.AttachmentLayout = AttachmentLayoutTypes.Carousel;
                         message.Attachments = items;
-                        for (int i = 0; i < dt.Rows.Count; i++)
-                        {
+
                             try
                             {
-                                var userAccount = new ChannelAccount(name: dt.Rows[i]["UserName"].ToString(), id: dt.Rows[i]["UserId"].ToString());
+                                var userAccount = new ChannelAccount(name: dr["UserName"].ToString(), id: dr["UserId"].ToString());
                                 uzytkownik = userAccount.Name;
                                 uzytkownikId = Convert.ToInt64(userAccount.Id);
-                                var botAccount = new ChannelAccount(name: dt.Rows[i]["BotName"].ToString(), id: dt.Rows[i]["BotId"].ToString());
-                                var connector = new ConnectorClient(new Uri(dt.Rows[i]["Url"].ToString()), "0c13722a-e1e0-4876-a1ce-d245404e7eda", "CQcoBVbMwV5XvcYYpqsdJQR");
+                                var botAccount = new ChannelAccount(name: dr["BotName"].ToString(), id: dr["BotId"].ToString());
+                                var connector = new ConnectorClient(new Uri(dr["Url"].ToString()), "0c13722a-e1e0-4876-a1ce-d245404e7eda", "CQcoBVbMwV5XvcYYpqsdJQR");
                                 var conversationId = await connector.Conversations.CreateDirectConversationAsync(botAccount, userAccount);
                                 message.From = botAccount;
                                 message.Recipient = userAccount;
@@ -667,28 +661,39 @@ public class MessagesController : ApiController
                             }
                             catch (Exception ex)
                             {
-                                AddToLog("Błąd wysyłania wiadomości do: " + uzytkownik + " " + ex.ToString());
+                         //       AddToLog("Błąd wysyłania wiadomości do: " + uzytkownik + " " + ex.ToString());
                                 DeleteUser(uzytkownikId);
                             }
-                        }
+                        
                     }
                     catch (Exception ex)
                     {
-                        AddToLog("Błąd wysyłania wiadomości do: " + uzytkownik + " " + ex.ToString());
+                     //   AddToLog("Błąd wysyłania wiadomości do: " + uzytkownik + " " + ex.ToString());
                     }
                     
 
-                    AddWiadomosc(hreflist3);
-                    AddWiadomoscOrlen(hrefList2);
+
                 }
-            }
+            
         }
         catch (Exception ex)
         {
-            AddToLog("Błąd wysłania wiadomosci: " +ex.ToString());
+         //   AddToLog("Błąd wysłania wiadomosci: " +ex.ToString());
         }
     }
 
+
+    public static void ZapiszWiadomosci(DataTable dtWiadomosci,DataTable dtWiadomosciOrlen)
+    {
+        List<IGrouping<string, string>> hrefList2 = new List<IGrouping<string, string>>();
+        List<IGrouping<string, string>> hreflist3 = new List<IGrouping<string, string>>();
+
+        GetCardsAttachments(ref hreflist3, false, dtWiadomosci);
+        GetCardsAttachmentsOrlenLiga(ref hrefList2, false, dtWiadomosciOrlen);
+
+        AddWiadomosc(hreflist3);
+        AddWiadomoscOrlen(hrefList2);
+    }
     public static void CallToChildThread()
     {
         try
@@ -814,7 +819,7 @@ public class MessagesController : ApiController
     }
 
 
-    public static IList<Attachment> GetCardsAttachments(ref List<IGrouping<string, string>> hrefList, bool newUser=false)
+    public static IList<Attachment> GetCardsAttachments(ref List<IGrouping<string, string>> hrefList, bool newUser=false,DataTable dtWiadomosci=null)
     {
         List<Attachment> list = new List<Attachment>();
 
@@ -874,7 +879,8 @@ public class MessagesController : ApiController
 
             int index = 5;
 
-            DataTable dt = GetWiadomosci();
+            DataTable dt = dtWiadomosci;
+            if (dt==null) dt = GetWiadomosci();
 
             if (newUser == true)
             {
@@ -1005,7 +1011,7 @@ public class MessagesController : ApiController
     }
 
 
-    public static IList<Attachment> GetCardsAttachmentsOrlenLiga(ref List<IGrouping<string, string>> hrefList, bool newUser = false)
+    public static IList<Attachment> GetCardsAttachmentsOrlenLiga(ref List<IGrouping<string, string>> hrefList, bool newUser = false,DataTable dtWiadomosciOrlen=null)
     {
         List<Attachment> list = new List<Attachment>();
 
@@ -1065,7 +1071,8 @@ public class MessagesController : ApiController
 
             int index = 5;
 
-            DataTable dt = GetWiadomosciOrlen();
+            DataTable dt = dtWiadomosciOrlen;
+            if(dt==null) dt = GetWiadomosciOrlen();
 
             if (newUser == true)
             {
