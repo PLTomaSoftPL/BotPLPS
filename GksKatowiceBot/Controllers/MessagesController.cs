@@ -35,7 +35,7 @@ public class MessagesController : ApiController
 
         try
         {
-            
+
 
             if (activity.Type == ActivityTypes.Message)
             {
@@ -50,7 +50,7 @@ public class MessagesController : ApiController
                     userStruct.ServiceUrl = activity.ServiceUrl;
 
                     AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
-                  //  AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
+                    //  AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
 
                     Helpers.Helpers.listaAdresow.Add(userStruct);
                     ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
@@ -122,7 +122,7 @@ public class MessagesController : ApiController
                     await connector.Conversations.SendToConversationAsync((Activity)message);
 
                 }
-                else if(activity.Text== "PlusLiga")
+                else if (activity.Text == "PlusLiga")
                 {
                     Helpers.Helpers.userDataStruct userStruct = new Helpers.Helpers.userDataStruct();
                     userStruct.userName = activity.From.Name;
@@ -131,8 +131,8 @@ public class MessagesController : ApiController
                     userStruct.botId = activity.Recipient.Id;
                     userStruct.ServiceUrl = activity.ServiceUrl;
 
-                  //  AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
-                   // AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
+                    //  AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
+                    // AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
 
                     Helpers.Helpers.listaAdresow.Add(userStruct);
                     ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
@@ -210,7 +210,7 @@ public class MessagesController : ApiController
                     await connector.Conversations.SendToConversationAsync((Activity)message);
 
                 }
-                else if (activity.Text=="ORLEN Liga")
+                else if (activity.Text == "ORLEN Liga")
                 {
                     Helpers.Helpers.userDataStruct userStruct = new Helpers.Helpers.userDataStruct();
                     userStruct.userName = activity.From.Name;
@@ -220,13 +220,18 @@ public class MessagesController : ApiController
                     userStruct.ServiceUrl = activity.ServiceUrl;
 
                     //AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
-                   // AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
+                    // AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
 
                     Helpers.Helpers.listaAdresow.Add(userStruct);
+                    MicrosoftAppCredentials.TrustServiceUrl(activity.ServiceUrl, DateTime.MaxValue);
                     ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                     var userAccount = new ChannelAccount(name: activity.From.Name, id: activity.From.Id);
                     var botAccount = new ChannelAccount(name: activity.Recipient.Name, id: activity.Recipient.Id);
-                    connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                    connector = new ConnectorClient(new Uri(activity.ServiceUrl), new MicrosoftAppCredentials
+                    {
+                        MicrosoftAppId = "0c13722a-e1e0-4876-a1ce-d245404e7eda",
+                        MicrosoftAppPassword = "CQcoBVbMwV5XvcYYpqsdJQR"
+                    });
                     var conversationId = await connector.Conversations.CreateDirectConversationAsync(botAccount, userAccount);
                     IMessageActivity message = Activity.CreateMessageActivity();
                     message.ChannelData = JObject.FromObject(new
@@ -370,7 +375,7 @@ public class MessagesController : ApiController
                                }
                     });
 
-                    
+
                     message.From = botAccount;
                     message.Recipient = userAccount;
                     message.Conversation = new ConversationAccount(id: conversationId.Id);
@@ -499,7 +504,7 @@ public class MessagesController : ApiController
                     message.AttachmentLayout = AttachmentLayoutTypes.Carousel;
                     List<IGrouping<string, string>> hrefList = new List<IGrouping<string, string>>();
                     message.Text = "Wybierz";
-                   // message.Attachments = GetCardsAttachments(ref hrefList, true);
+                    // message.Attachments = GetCardsAttachments(ref hrefList, true);
 
                     await connector.Conversations.SendToConversationAsync((Activity)message);
 
@@ -519,106 +524,106 @@ public class MessagesController : ApiController
         return response;
     }
 
-    public async static void SendThreadMessage(DataRow dr,DataTable dtWiadomosci,DataTable dtWiadomosciOrlen)
+    public async static void SendThreadMessage(List<DataRow> dt, DataTable dtWiadomosci, DataTable dtWiadomosciOrlen)
     {
 
         try
-        { 
-                List<IGrouping<string, string>> hrefList = new List<IGrouping<string, string>>();
-                List<IGrouping<string, string>> hrefList2 = new List<IGrouping<string, string>>();
-                List<IGrouping<string, string>> hreflist3 = new List<IGrouping<string, string>>();
-                var items = GetCardsAttachments(ref hrefList,false,dtWiadomosci);
-                hreflist3 = hrefList;
-                var items2 = GetCardsAttachmentsOrlenLiga(ref hrefList2,false,dtWiadomosciOrlen);
+        {
+            List<IGrouping<string, string>> hrefList = new List<IGrouping<string, string>>();
+            List<IGrouping<string, string>> hrefList2 = new List<IGrouping<string, string>>();
+            List<IGrouping<string, string>> hreflist3 = new List<IGrouping<string, string>>();
+            var items = GetCardsAttachments(ref hrefList, false, dtWiadomosci);
+            hreflist3 = hrefList;
+            var items2 = GetCardsAttachmentsOrlenLiga(ref hrefList2, false, dtWiadomosciOrlen);
 
-                var items3 = new List<Attachment>();
+            var items3 = new List<Attachment>();
 
-                foreach (var item in items)
+            foreach (var item in items)
+            {
+                if (items3.Count() < 4)
                 {
-                    if (items3.Count() < 4)
+                    items3.Add(item);
+                }
+            }
+
+            if (items3.Count() == 0)
+            {
+                for (int i = 0; i < items2.Count(); i++)
+                {
+                    if (i < 2)
                     {
-                        items3.Add(item);
+                        items3.Add(items2[i]);
                     }
                 }
-
-                if (items3.Count() == 0)
+            }
+            else if (items3.Count() == 1)
+            {
+                for (int i = 0; i < items2.Count(); i++)
                 {
-                    for (int i = 0; i < items2.Count(); i++)
+                    if (i < 2)
                     {
-                        if (i < 2)
-                        {
-                            items3.Add(items2[i]);
-                        }
+                        items3.Add(items2[i]);
                     }
                 }
-                else if (items3.Count() == 1)
+            }
+            else if (items3.Count() == 2)
+            {
+                for (int i = 0; i < items2.Count(); i++)
                 {
-                    for (int i = 0; i < items2.Count(); i++)
+                    if (i < 2)
                     {
-                        if (i < 2)
-                        {
-                            items3.Add(items2[i]);
-                        }
+                        items3.Add(items2[i]);
                     }
                 }
-                else if (items3.Count() == 2)
+            }
+            else if (items3.Count() == 3)
+            {
+                for (int i = 0; i < items2.Count(); i++)
                 {
-                    for (int i = 0; i < items2.Count(); i++)
+                    if (i == 0)
                     {
-                        if (i < 2)
-                        {
-                            items3.Add(items2[i]);
-                        }
+                        items3[2] = items2[i];
+                    }
+                    else if (i == 1)
+                    {
+                        items3.Add(items2[i]);
                     }
                 }
-                else if (items3.Count() == 3)
+            }
+            else if (items3.Count() == 4)
+            {
+                for (int i = 0; i < items2.Count(); i++)
                 {
-                    for (int i = 0; i < items2.Count(); i++)
+                    if (i == 0)
                     {
-                        if (i == 0)
-                        {
-                            items3[2] = items2[i];
-                        }
-                        else if (i == 1)
-                        {
-                            items3.Add(items2[i]);
-                        }
+                        items3[2] = items2[i];
+                    }
+                    else if (i == 1)
+                    {
+                        items3[3] = items2[i];
                     }
                 }
-                else if (items3.Count() == 4)
+            }
+
+            items = items3;
+
+
+            string uzytkownik = "";
+            Int64 uzytkownikId = 0;
+            //         DataTable dt = GetUser();
+
+            if (items.Count > 0)
+            {
+                try
                 {
-                    for (int i = 0; i < items2.Count(); i++)
+                    MicrosoftAppCredentials.TrustServiceUrl(@"https://facebook.botframework.com", DateTime.MaxValue);
+
+                    IMessageActivity message = Activity.CreateMessageActivity();
+                    message.ChannelData = JObject.FromObject(new
                     {
-                        if (i == 0)
-                        {
-                            items3[2] = items2[i];
-                        }
-                        else if (i == 1)
-                        {
-                            items3[3] = items2[i];
-                        }
-                    }
-                }
-
-                items = items3;
-
-
-                string uzytkownik = "";
-                Int64 uzytkownikId = 0;
-       //         DataTable dt = GetUser();
-
-                if (items.Count > 0)
-                {
-                    try
-                    {
-                        MicrosoftAppCredentials.TrustServiceUrl(@"https://facebook.botframework.com", DateTime.MaxValue);
-
-                        IMessageActivity message = Activity.CreateMessageActivity();
-                        message.ChannelData = JObject.FromObject(new
-                        {
-                            notification_type = "REGULAR",
-                            quick_replies = new dynamic[]
-                                {
+                        notification_type = "REGULAR",
+                        quick_replies = new dynamic[]
+                            {
                                new
                                 {
                                     content_type = "text",
@@ -640,50 +645,56 @@ public class MessagesController : ApiController
                                    // image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Green%20Ball.png"
                                 },
 
-                                }
-                        });
-
-                        message.AttachmentLayout = AttachmentLayoutTypes.Carousel;
-                        message.Attachments = items;
-
-                            try
-                            {
-                                var userAccount = new ChannelAccount(name: dr["UserName"].ToString(), id: dr["UserId"].ToString());
-                                uzytkownik = userAccount.Name;
-                                uzytkownikId = Convert.ToInt64(userAccount.Id);
-                                var botAccount = new ChannelAccount(name: dr["BotName"].ToString(), id: dr["BotId"].ToString());
-                                var connector = new ConnectorClient(new Uri(dr["Url"].ToString()), "0c13722a-e1e0-4876-a1ce-d245404e7eda", "CQcoBVbMwV5XvcYYpqsdJQR");
-                                var conversationId = await connector.Conversations.CreateDirectConversationAsync(botAccount, userAccount);
-                                message.From = botAccount;
-                                message.Recipient = userAccount;
-                                message.Conversation = new ConversationAccount(id: conversationId.Id, isGroup: false);
-                                await connector.Conversations.SendToConversationAsync((Activity)message).ConfigureAwait(false);
                             }
-                            catch (Exception ex)
-                            {
-                         //       AddToLog("Błąd wysyłania wiadomości do: " + uzytkownik + " " + ex.ToString());
-                                DeleteUser(uzytkownikId);
-                            }
-                        
-                    }
-                    catch (Exception ex)
+                    });
+
+                    message.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+                    message.Attachments = items;
+
+
+                    foreach (DataRow dr in dt)
                     {
-                     //   AddToLog("Błąd wysyłania wiadomości do: " + uzytkownik + " " + ex.ToString());
-                    }
-                    
+                        try
+                        {
+                            var userAccount = new ChannelAccount(name: dr["UserName"].ToString(), id: dr["UserId"].ToString());
+                            uzytkownik = userAccount.Name;
+                            uzytkownikId = Convert.ToInt64(userAccount.Id);
+                            var botAccount = new ChannelAccount(name: dr["BotName"].ToString(), id: dr["BotId"].ToString());
+                            var connector = new ConnectorClient(new Uri(dr["Url"].ToString()), "0c13722a-e1e0-4876-a1ce-d245404e7eda", "CQcoBVbMwV5XvcYYpqsdJQR");
+                            var conversationId = await connector.Conversations.CreateDirectConversationAsync(botAccount, userAccount);
+                            message.From = botAccount;
+                            message.Recipient = userAccount;
+                            message.Conversation = new ConversationAccount(id: conversationId.Id, isGroup: false);
+                            await connector.Conversations.SendToConversationAsync((Activity)message).ConfigureAwait(false);
 
+                        }
+                        catch (Exception ex)
+                        {
+                            //       AddToLog("Błąd wysyłania wiadomości do: " + uzytkownik + " " + ex.ToString());
+                            DeleteUser(uzytkownikId);
+                        }
+
+                    }
 
                 }
-            
+                catch (Exception ex)
+                {
+                    //   AddToLog("Błąd wysyłania wiadomości do: " + uzytkownik + " " + ex.ToString());
+                }
+
+
+
+            }
+
         }
         catch (Exception ex)
         {
-         //   AddToLog("Błąd wysłania wiadomosci: " +ex.ToString());
+            //   AddToLog("Błąd wysłania wiadomosci: " +ex.ToString());
         }
     }
 
 
-    public static void ZapiszWiadomosci(DataTable dtWiadomosci,DataTable dtWiadomosciOrlen)
+    public static void ZapiszWiadomosci(DataTable dtWiadomosci, DataTable dtWiadomosciOrlen)
     {
         List<IGrouping<string, string>> hrefList2 = new List<IGrouping<string, string>>();
         List<IGrouping<string, string>> hreflist3 = new List<IGrouping<string, string>>();
@@ -720,7 +731,7 @@ public class MessagesController : ApiController
         }
         else if (message.Type == ActivityTypes.ConversationUpdate)
         {
-          
+
         }
         else if (message.Type == ActivityTypes.ContactRelationUpdate)
         {
@@ -733,7 +744,7 @@ public class MessagesController : ApiController
         else if (message.Type == ActivityTypes.Ping)
         {
         }
-        else if(message.Type == ActivityTypes.Typing)
+        else if (message.Type == ActivityTypes.Typing)
         {
 
         }
@@ -748,7 +759,7 @@ public class MessagesController : ApiController
         {
             SqlConnection sqlConnection1 = new SqlConnection("Server=tcp:plps.database.windows.net,1433;Initial Catalog=PLPS;Persist Security Info=False;User ID=tomasoft;Password=Tomason18,;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             SqlCommand cmd = new SqlCommand();
-            
+
             cmd.CommandText = "SELECT * FROM [dbo].[User] where flgDeleted=0";
             cmd.CommandType = CommandType.Text;
             cmd.Connection = sqlConnection1;
@@ -819,17 +830,17 @@ public class MessagesController : ApiController
     }
 
 
-    public static IList<Attachment> GetCardsAttachments(ref List<IGrouping<string, string>> hrefList, bool newUser=false,DataTable dtWiadomosci=null)
+    public static IList<Attachment> GetCardsAttachments(ref List<IGrouping<string, string>> hrefList, bool newUser = false, DataTable dtWiadomosci = null)
     {
         List<Attachment> list = new List<Attachment>();
 
         string urlAddress = "http://www.plusliga.pl";
-       // string urlAddress = "http://www.orlenliga.pl/";
+        // string urlAddress = "http://www.orlenliga.pl/";
 
         HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-                        var listTemp2 = new List<System.Linq.IGrouping<string, string>>();
+        var listTemp2 = new List<System.Linq.IGrouping<string, string>>();
 
         if (response.StatusCode == HttpStatusCode.OK)
         {
@@ -863,7 +874,7 @@ public class MessagesController : ApiController
 
             doc2.LoadHtml(text);
             hrefList = doc2.DocumentNode.SelectNodes("//a")
-                              .Select(p => p.GetAttributeValue("href", "not found")).Where(p => p.Contains("/news/") || p.Contains("/video/") || p.Contains("/gallery/")||p.Contains("/blog/")).GroupBy(p => p.ToString())
+                              .Select(p => p.GetAttributeValue("href", "not found")).Where(p => p.Contains("/news/") || p.Contains("/video/") || p.Contains("/gallery/") || p.Contains("/blog/")).GroupBy(p => p.ToString())
                               .ToList();
 
             var imgList = doc2.DocumentNode.SelectNodes("//img")
@@ -880,7 +891,7 @@ public class MessagesController : ApiController
             int index = 5;
 
             DataTable dt = dtWiadomosci;
-            if (dt==null) dt = GetWiadomosci();
+            if (dt == null) dt = GetWiadomosci();
 
             if (newUser == true)
             {
@@ -918,7 +929,7 @@ public class MessagesController : ApiController
                     imgList = imageListTemp;
                     titleList = titleListTemp;
                     //   AddWiadomosc(listTemp2);
-                    
+
                 }
                 else
                 {
@@ -950,7 +961,7 @@ public class MessagesController : ApiController
        new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
    );
                 }
-                else if(link.Contains("gallery"))
+                else if (link.Contains("gallery"))
                 {
                     list.Add(GetHeroCard(
      titleList[i], "", "",
@@ -969,9 +980,9 @@ public class MessagesController : ApiController
    );
                 }
 
-              //  list.Add(new Microsoft.Bot.Connector.VideoCard(titleList[i], "", "",null)
-                }
-            
+                //  list.Add(new Microsoft.Bot.Connector.VideoCard(titleList[i], "", "",null)
+            }
+
         }
         if (listTemp2.Count > 0)
         {
@@ -1011,12 +1022,12 @@ public class MessagesController : ApiController
     }
 
 
-    public static IList<Attachment> GetCardsAttachmentsOrlenLiga(ref List<IGrouping<string, string>> hrefList, bool newUser = false,DataTable dtWiadomosciOrlen=null)
+    public static IList<Attachment> GetCardsAttachmentsOrlenLiga(ref List<IGrouping<string, string>> hrefList, bool newUser = false, DataTable dtWiadomosciOrlen = null)
     {
         List<Attachment> list = new List<Attachment>();
 
-       // string urlAddress = "http://www.plusliga.pl";
-         string urlAddress = "http://www.orlenliga.pl/";
+        // string urlAddress = "http://www.plusliga.pl";
+        string urlAddress = "http://www.orlenliga.pl/";
 
         HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
@@ -1072,7 +1083,7 @@ public class MessagesController : ApiController
             int index = 5;
 
             DataTable dt = dtWiadomosciOrlen;
-            if(dt==null) dt = GetWiadomosciOrlen();
+            if (dt == null) dt = GetWiadomosciOrlen();
 
             if (newUser == true)
             {
@@ -1128,7 +1139,7 @@ public class MessagesController : ApiController
                 }
                 else
                 {
-                 //   link = "http://plusliga.pl" + hrefList[i].Key;
+                    //   link = "http://plusliga.pl" + hrefList[i].Key;
                     link = "http://www.orlenliga.pl/" + hrefList[i].Key;
                 }
                 if (link.Contains("video"))
@@ -1140,7 +1151,7 @@ public class MessagesController : ApiController
                      new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
                  );
                 }
-                else if(link.Contains("gallery"))
+                else if (link.Contains("gallery"))
                 {
                     list.Add(GetHeroCard(
                    titleList[i], "", "",
@@ -1159,7 +1170,7 @@ public class MessagesController : ApiController
                  );
                 }
 
-                  
+
                 //  list.Add(new Microsoft.Bot.Connector.VideoCard(titleList[i], "", "",null)
             }
 
@@ -1247,9 +1258,9 @@ public class MessagesController : ApiController
                               .Select(p => p.GetAttributeValue("href", "not found")).Where(p => p.Contains("/video/")).GroupBy(p => p.ToString())
                               .ToList();
 
-            for(int i=0;i<hrefList.Count;i++)
+            for (int i = 0; i < hrefList.Count; i++)
             {
-                if(hrefList[i].Key.Contains("comments"))
+                if (hrefList[i].Key.Contains("comments"))
                 {
                     hrefList.RemoveAt(i);
                 }
@@ -1339,7 +1350,7 @@ public class MessagesController : ApiController
             }
 
         }
-        if (listTemp2.Count>0)
+        if (listTemp2.Count > 0)
         {
             hrefList = listTemp2;
         }
@@ -1481,142 +1492,142 @@ public class MessagesController : ApiController
     {
         List<Attachment> list = new List<Attachment>();
 
-       // string urlAddress = "http://www.plusliga.pl";
+        // string urlAddress = "http://www.plusliga.pl";
 
-       // HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
-       // HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+        // HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
+        // HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-       // if (response.StatusCode == HttpStatusCode.OK)
-       // {
-       //     Stream receiveStream = response.GetResponseStream();
-       //     StreamReader readStream = null;
+        // if (response.StatusCode == HttpStatusCode.OK)
+        // {
+        //     Stream receiveStream = response.GetResponseStream();
+        //     StreamReader readStream = null;
 
-       //     if (response.CharacterSet == null)
-       //     {
-       //         readStream = new StreamReader(receiveStream);
-       //     }
-       //     else
-       //     {
-       //         readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-       //     }
+        //     if (response.CharacterSet == null)
+        //     {
+        //         readStream = new StreamReader(receiveStream);
+        //     }
+        //     else
+        //     {
+        //         readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+        //     }
 
-       //     string data = readStream.ReadToEnd();
+        //     string data = readStream.ReadToEnd();
 
-       //     HtmlDocument doc = new HtmlDocument();
-       //     doc.LoadHtml(data);
+        //     HtmlDocument doc = new HtmlDocument();
+        //     doc.LoadHtml(data);
 
-       //     string matchResultDivId = "owl-carousel-home-slider-2";
-       //     string xpath = String.Format("//div[@id='{0}']/div", matchResultDivId);
-       //     var people = doc.DocumentNode.SelectNodes(xpath).Select(p => p.InnerHtml);
-       //     string text = "";
-       //     foreach (var person in people)
-       //     {
-       //         text += person;
-       //     }
+        //     string matchResultDivId = "owl-carousel-home-slider-2";
+        //     string xpath = String.Format("//div[@id='{0}']/div", matchResultDivId);
+        //     var people = doc.DocumentNode.SelectNodes(xpath).Select(p => p.InnerHtml);
+        //     string text = "";
+        //     foreach (var person in people)
+        //     {
+        //         text += person;
+        //     }
 
-       //     HtmlDocument doc2 = new HtmlDocument();
+        //     HtmlDocument doc2 = new HtmlDocument();
 
-       //     doc2.LoadHtml(text);
-       //     var hrefList = doc2.DocumentNode.SelectNodes("//a")
-       //                       .Select(p => p.GetAttributeValue("href", "not found")).Where(p => p.Contains("/news/") || p.Contains("/video/") || p.Contains("/gallery/")).GroupBy(p => p.ToString())
-       //                       .ToList();
+        //     doc2.LoadHtml(text);
+        //     var hrefList = doc2.DocumentNode.SelectNodes("//a")
+        //                       .Select(p => p.GetAttributeValue("href", "not found")).Where(p => p.Contains("/news/") || p.Contains("/video/") || p.Contains("/gallery/")).GroupBy(p => p.ToString())
+        //                       .ToList();
 
-       //     //var hrefList2 = doc2.DocumentNode.SelectNodes("//a")
-       //     //                  .Select(p => p.GetAttributeValue("href", "not found")).Where(p => p.Contains("/video/")).GroupBy(p => p.ToString())
-       //     //                  .ToList();
+        //     //var hrefList2 = doc2.DocumentNode.SelectNodes("//a")
+        //     //                  .Select(p => p.GetAttributeValue("href", "not found")).Where(p => p.Contains("/video/")).GroupBy(p => p.ToString())
+        //     //                  .ToList();
 
-       //     //var hrefList3 = doc2.DocumentNode.SelectNodes("//a")
-       //     //      .Select(p => p.GetAttributeValue("href", "not found")).Where(p => p.Contains("/gallery/")).GroupBy(p => p.ToString())
-       //     //      .ToList();
+        //     //var hrefList3 = doc2.DocumentNode.SelectNodes("//a")
+        //     //      .Select(p => p.GetAttributeValue("href", "not found")).Where(p => p.Contains("/gallery/")).GroupBy(p => p.ToString())
+        //     //      .ToList();
 
-       //     //hrefList.AddRange(hrefList2);
-       //     //hrefList.AddRange(hrefList3);
+        //     //hrefList.AddRange(hrefList2);
+        //     //hrefList.AddRange(hrefList3);
 
-       //     var imgList = doc2.DocumentNode.SelectNodes("//img")
-       //                       .Select(p => p.GetAttributeValue("src", "not found"))
-       //                       .ToList();
+        //     var imgList = doc2.DocumentNode.SelectNodes("//img")
+        //                       .Select(p => p.GetAttributeValue("src", "not found"))
+        //                       .ToList();
 
-       //     var titleList = doc2.DocumentNode.SelectNodes("//img")
-       //                       .Select(p => p.GetAttributeValue("alt", "not found"))
-       //                       .ToList();
+        //     var titleList = doc2.DocumentNode.SelectNodes("//img")
+        //                       .Select(p => p.GetAttributeValue("alt", "not found"))
+        //                       .ToList();
 
-       //     response.Close();
-       //     readStream.Close();
+        //     response.Close();
+        //     readStream.Close();
 
-       //     int index = 5;
+        //     int index = 5;
 
-       //     DataTable dt = GetWiadomosci();
+        //     DataTable dt = GetWiadomosci();
 
-       //     if (newUser == true)
-       //     {
-       //         index = 5;
-       //         if (dt.Rows.Count == 0)
-       //         {
-       //             AddWiadomosc(hrefList);
-       //         }
-       //     }
+        //     if (newUser == true)
+        //     {
+        //         index = 5;
+        //         if (dt.Rows.Count == 0)
+        //         {
+        //             AddWiadomosc(hrefList);
+        //         }
+        //     }
 
-       //     else
-       //     {
-       //         if (dt.Rows.Count > 0)
-       //         {
-       //             List<int> deleteList = new List<int>();
-       //             var listTemp = new List<System.Linq.IGrouping<string, string>>();
-       //             var listTemp2 = new List<System.Linq.IGrouping<string, string>>();
-       //             for (int i = 0; i < hrefList.Count; i++)
-       //             {
-       //                 if (dt.Rows[dt.Rows.Count - 1]["Wiadomosc1"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc2"].ToString() != hrefList[i].Key &&
-       //                     dt.Rows[dt.Rows.Count - 1]["Wiadomosc3"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc4"].ToString() != hrefList[i].Key
-       //                     && dt.Rows[dt.Rows.Count - 1]["Wiadomosc5"].ToString() != hrefList[i].Key)
-       //                 {
-       //                     listTemp.Add(hrefList[i]);
-       //                 }
-       //                 listTemp2.Add(hrefList[i]);
-       //             }
-       //             hrefList = listTemp;
-       //             index = hrefList.Count;
-       //             AddWiadomosc(listTemp2);
-       //         }
-       //         else
-       //         {
-       //             index = 5;
-       //             AddWiadomosc(hrefList);
-       //         }
-       //     }
+        //     else
+        //     {
+        //         if (dt.Rows.Count > 0)
+        //         {
+        //             List<int> deleteList = new List<int>();
+        //             var listTemp = new List<System.Linq.IGrouping<string, string>>();
+        //             var listTemp2 = new List<System.Linq.IGrouping<string, string>>();
+        //             for (int i = 0; i < hrefList.Count; i++)
+        //             {
+        //                 if (dt.Rows[dt.Rows.Count - 1]["Wiadomosc1"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc2"].ToString() != hrefList[i].Key &&
+        //                     dt.Rows[dt.Rows.Count - 1]["Wiadomosc3"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc4"].ToString() != hrefList[i].Key
+        //                     && dt.Rows[dt.Rows.Count - 1]["Wiadomosc5"].ToString() != hrefList[i].Key)
+        //                 {
+        //                     listTemp.Add(hrefList[i]);
+        //                 }
+        //                 listTemp2.Add(hrefList[i]);
+        //             }
+        //             hrefList = listTemp;
+        //             index = hrefList.Count;
+        //             AddWiadomosc(listTemp2);
+        //         }
+        //         else
+        //         {
+        //             index = 5;
+        //             AddWiadomosc(hrefList);
+        //         }
+        //     }
 
-       //     for (int i = 0; i < index; i++)
-       //     {
+        //     for (int i = 0; i < index; i++)
+        //     {
 
-       //         string link = "";
-       //         if (hrefList[i].Key.Contains("http"))
-       //         {
-       //             link = hrefList[i].Key;
-       //         }
-       //         else
-       //         {
-       //             link = "http://plusliga.pl" + hrefList[i].Key;
-       //         }
+        //         string link = "";
+        //         if (hrefList[i].Key.Contains("http"))
+        //         {
+        //             link = hrefList[i].Key;
+        //         }
+        //         else
+        //         {
+        //             link = "http://plusliga.pl" + hrefList[i].Key;
+        //         }
 
 
 
-       //         //  list.Add(new Microsoft.Bot.Connector.VideoCard(titleList[i], "", "",null)
-       ////     }
+        //         //  list.Add(new Microsoft.Bot.Connector.VideoCard(titleList[i], "", "",null)
+        ////     }
 
-       // }
-            list.Add(GetHeroCard(
-       "Drużyna 1 vs Drużyna 2 \n     27-11-2016 20:00", "", "",
-       new CardImage(url: "http://www.naziemna.info/wp-content/uploads/2016/05/logopolsatsport.jpg"),
-       new CardAction(ActionTypes.PlayVideo, "Czytaj więcej", value: "https://www.youtube.com/watch?v=2gsYr2l4RJA&t=494s"),null)
-   );
+        // }
+        list.Add(GetHeroCard(
+   "Drużyna 1 vs Drużyna 2 \n     27-11-2016 20:00", "", "",
+   new CardImage(url: "http://www.naziemna.info/wp-content/uploads/2016/05/logopolsatsport.jpg"),
+   new CardAction(ActionTypes.PlayVideo, "Czytaj więcej", value: "https://www.youtube.com/watch?v=2gsYr2l4RJA&t=494s"), null)
+);
         list.Add(GetHeroCard(
 "Drużyna 3 vs Drużyna 4 \n     27-11-2016 20:00", "", "",
 new CardImage(url: "https://upload.wikimedia.org/wikipedia/commons/4/49/IPLA_small.jpg"),
-new CardAction(ActionTypes.OpenUrl, "Czytaj więcej", value: "http://www.ipla.pl"),null)
+new CardAction(ActionTypes.OpenUrl, "Czytaj więcej", value: "http://www.ipla.pl"), null)
 );
         list.Add(GetHeroCard(
 "Drużyna 5 vs Drużyna 6 \n     27-11-2016 20:00", "", "",
 new CardImage(url: "http://www.naziemna.info/wp-content/uploads/2016/05/logopolsatsport.jpg"),
-new CardAction(ActionTypes.OpenUrl, "Czytaj więcej", value: "http://www.polsatsport.pl"),null)
+new CardAction(ActionTypes.OpenUrl, "Czytaj więcej", value: "http://www.polsatsport.pl"), null)
 );
         return list;
         //return new List<Attachment>()
@@ -1804,7 +1815,7 @@ new CardAction(ActionTypes.OpenUrl, "Czytaj więcej", value: "http://www.polsats
             SqlCommand cmd = new SqlCommand();
             SqlDataReader reader;
 
-            cmd.CommandText = "INSERT INTO Log (Tresc) VALUES ('"+action+" "+DateTime.Now.ToString()+"')";
+            cmd.CommandText = "INSERT INTO Log (Tresc) VALUES ('" + action + " " + DateTime.Now.ToString() + "')";
             cmd.CommandType = CommandType.Text;
             cmd.Connection = sqlConnection1;
 
@@ -1812,7 +1823,7 @@ new CardAction(ActionTypes.OpenUrl, "Czytaj więcej", value: "http://www.polsats
             cmd.ExecuteNonQuery();
 
             sqlConnection1.Close();
-            
+
         }
         catch
         {
@@ -1831,7 +1842,7 @@ new CardAction(ActionTypes.OpenUrl, "Czytaj więcej", value: "http://www.polsats
         }
     }
 
-    public static void AddUser(string UserName,string UserId,string BotName,string BotId,string Url,byte flgTyp)
+    public static void AddUser(string UserName, string UserId, string BotName, string BotId, string Url, byte flgTyp)
     {
 
         try
@@ -1883,7 +1894,7 @@ new CardAction(ActionTypes.OpenUrl, "Czytaj więcej", value: "http://www.polsats
         }
     }
 
-    public static void AddWiadomosc( List<System.Linq.IGrouping<string,string>> hrefList)
+    public static void AddWiadomosc(List<System.Linq.IGrouping<string, string>> hrefList)
     {
 
         try
@@ -1892,7 +1903,7 @@ new CardAction(ActionTypes.OpenUrl, "Czytaj więcej", value: "http://www.polsats
             SqlCommand cmd = new SqlCommand();
             SqlDataReader reader;
 
-            cmd.CommandText = "INSERT INTO [dbo].[Wiadomosci] (Nazwa,DataUtw,Wiadomosc1,Wiadomosc2,Wiadomosc3,Wiadomosc4,Wiadomosc5) VALUES ('" + "" + "','" + DateTime.Now + "','"+ hrefList[0].Key+ "','" + hrefList[1].Key + "','" + hrefList[2].Key + "','" + hrefList[3].Key + "','" + hrefList[4].Key + "')";
+            cmd.CommandText = "INSERT INTO [dbo].[Wiadomosci] (Nazwa,DataUtw,Wiadomosc1,Wiadomosc2,Wiadomosc3,Wiadomosc4,Wiadomosc5) VALUES ('" + "" + "','" + DateTime.Now + "','" + hrefList[0].Key + "','" + hrefList[1].Key + "','" + hrefList[2].Key + "','" + hrefList[3].Key + "','" + hrefList[4].Key + "')";
             cmd.CommandType = CommandType.Text;
             cmd.Connection = sqlConnection1;
 
@@ -1904,7 +1915,7 @@ new CardAction(ActionTypes.OpenUrl, "Czytaj więcej", value: "http://www.polsats
         }
         catch (Exception ex)
         {
-            AddToLog("Błąd dodawania wiadomości: "+ex.ToString());
+            AddToLog("Błąd dodawania wiadomości: " + ex.ToString());
         }
     }
 
@@ -1952,7 +1963,7 @@ new CardAction(ActionTypes.OpenUrl, "Czytaj więcej", value: "http://www.polsats
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
                 string json = "{\"setting_type\":\"call_to_actions\"," +
-                              "\"thread_state\":\"new_thread\","+
+                              "\"thread_state\":\"new_thread\"," +
                               "\"call_to_actions:\":[\"payload\":\"USER_DEFINED_PAYLOAD\"]\"}";
 
                 streamWriter.Write(json);
